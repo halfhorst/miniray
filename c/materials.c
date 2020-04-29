@@ -82,7 +82,6 @@ bool metal_scatter(Material *this, Ray ray_in, HitRecord hr, Vec3 *attenuation, 
   return (dot(scattered_ray.direction, hr.normal) > 0);
 }
 
-// TODO: Hollow glass sphere doesn't work
 bool dielectric_scatter(Material *this, Ray ray_in, HitRecord hr, Vec3 *attenuation, Ray *scattered) {
   // no absorption by glass
   Vec3 white = {.x = 1.0, .y = 1.0, .z = 1.0};
@@ -95,7 +94,7 @@ bool dielectric_scatter(Material *this, Ray ray_in, HitRecord hr, Vec3 *attenuat
   float cos_theta = ffmin(dot(negate(unit_direction), hr.normal), 1.0);
   float sin_theta = sqrt(1.0 - (cos_theta * cos_theta));
 
-  if ((eta_ratio * sin_theta )> 1.0) {
+  if ((eta_ratio * sin_theta ) > 1.0) {
     Vec3 reflected = reflect(unit_direction, hr.normal);
     Ray scattered_ray = {.origin = hr.p, .direction = reflected};
     *scattered = scattered_ray;
@@ -120,9 +119,9 @@ Vec3 reflect(Vec3 v, Vec3 n) {
   return subtract(v, multiplyf(multiplyf(n, dot(v, n)), 2));
 }
 
-Vec3 refract(Vec3 r_in, Vec3 n, float eta_ratio) {
-  float cos_theta = dot(negate(r_in), n);
-  Vec3 r_out_parallel = multiplyf(add(r_in, multiplyf(n, cos_theta)), eta_ratio);
+Vec3 refract(Vec3 uv, Vec3 n, float eta_ratio) {
+  float cos_theta = dot(negate(uv), n);
+  Vec3 r_out_parallel = multiplyf(add(uv, multiplyf(n, cos_theta)), eta_ratio);
   Vec3 r_out_perpendicular = multiplyf(n, -1.0 * sqrt(1.0 - squared_length(r_out_parallel)));
   return add(r_out_parallel, r_out_perpendicular);
 }

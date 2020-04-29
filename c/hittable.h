@@ -37,5 +37,6 @@ struct HitRecord{
 
 Hittable make_sphere(Vec3 position, float radius, struct Material *material);
 bool hit_sphere(Hittable *this, Ray r, float tmin, float tmax, HitRecord *hr);
+void set_face_normal(HitRecord *hr, Ray r, Vec3 outward_normal);
 
 #endif

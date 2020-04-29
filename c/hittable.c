@@ -28,31 +28,35 @@ bool hit_sphere(Hittable *this, Ray r, float tmin, float tmax, HitRecord *hr) {
 
   Vec3 oc = subtract(r.origin, s->center);
   float a = dot(r.direction, r.direction);
-  float b = 2.0 * dot(oc, r.direction);
-  float c = dot(oc, oc) - (s->radius * s->radius);
-  float descriminant = (b * b) - (4.0 * a * c);
+  float half_b = dot(oc, r.direction);
+  float c = squared_length(oc) - (s->radius * s->radius);
+  float descriminant = (half_b * half_b) - (a * c);
 
   if (descriminant > 0) {
-    float t = (-b - sqrtf(descriminant)) / (2.0 * a);
+    float root = sqrtf(descriminant);
+    float t = (-half_b - root) / a;
     if (tmin < t && t < tmax) {
       hr->t = t;
       hr->p = point_at_parameter(r, t);
-      Vec3 outward_normal = unit_vector(subtract(hr->p, s->center));
-      hr->front_face = dot(r.direction, outward_normal) < 0;
-      hr->normal = hr->front_face ? outward_normal : negate(outward_normal);
+      Vec3 outward_normal = dividef(subtract(hr->p, s->center), s->radius);
+      set_face_normal(hr, r, outward_normal);
       hr->object = this;
       return true;
     }
-    t = (-b + sqrtf(descriminant)) / (2.0 * a);
+    t = (-half_b + root) / a;
     if (tmin < t && t < tmax) {
       hr->t = t;
       hr->p = point_at_parameter(r, t);
-      Vec3 outward_normal = unit_vector(subtract(hr->p, s->center));
-      hr->front_face = dot(r.direction, outward_normal) < 0;
-      hr->normal = hr->front_face ? outward_normal : negate(outward_normal);
+      Vec3 outward_normal = dividef(subtract(hr->p, s->center), s->radius);
+      set_face_normal(hr, r, outward_normal);
       hr->object = this;
       return true;
     }
   }
   return false;
+}
+
+void set_face_normal(HitRecord *hr, Ray r, Vec3 outward_normal) {
+  hr->front_face = dot(r.direction, outward_normal) < 0;
+  hr->normal = hr->front_face ? outward_normal : negate(outward_normal);
 }
