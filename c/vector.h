@@ -1,5 +1,8 @@
-#ifndef VEC3_H
-#define VEC3_H
+/*
+  3D vector and Ray facilities.
+*/
+#ifndef MINIRAY_VECTOR_H_
+#define MINIRAY_VECTOR_H_
 
 typedef struct Vec3 {
   float x;
@@ -29,4 +32,4 @@ float dot(Vec3 v1, Vec3 v2);
 Vec3 cross(Vec3 v1, Vec3 v2);
 Vec3 point_at_parameter(Ray r, float t);
 
-#endif
+#endif  // MINIRAY_VECTOR_H_

@@ -1,21 +1,32 @@
-#include "math.h"
-#include "stdlib.h"
-#include "stdbool.h"
+#include <math.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
 #include "hittable.h"
 #include "materials.h"
-#include "ray.h"
 #include "vector.h"
+#include "utilities.h"
 
-// TODO: this pattern is kind of confusing, each object potentially has different
-// malloc/free considerations
+/*
+  A sphere's hit function. Returns true if `r` hits the sphere. Populates the
+  HitRecrod `hr` on a hit.
+*/
+bool hit_sphere(Hittable *this, Ray r, float tmin, float tmax, HitRecord *hr);
+
+/*
+  Reorient the normal towards the camera if necessary, and record in the
+  HitRecord.
+*/
+void set_face_normal(HitRecord *hr, Ray r, Vec3 outward_normal);
+
+
+// TODO: This pattern is confusing, each object potentially has different
+// malloc/free considerations. Could mandate hittable data is on heap?
 Hittable make_sphere(Vec3 position, float radius, Material *material) {
-  // Vec3 sphere_location = {.x = position.x, .y = position.y, .z = z};
-  Sphere *s = malloc(sizeof(Sphere));
+  Sphere *s = crash_malloc(sizeof(Sphere));
   s->center = position;
   s->radius = radius;
-  // s->material = (Material *) material;
-  Hittable h = {.data = s, .hit = &hit_sphere, .material=material};
+  Hittable h = {.data = s, .hit = &hit_sphere, .material = material};
   return h;
 }
 
