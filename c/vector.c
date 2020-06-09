@@ -83,3 +83,7 @@ Vec3 cross(Vec3 v1, Vec3 v2) {
   };
   return cross;
 }
+
+Vec3 point_at_parameter(Ray r, float t) {
+  return add(r.origin, multiplyf(r.direction, t));
+}
