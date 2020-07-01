@@ -1,6 +1,6 @@
 CFLAGS = -std=c99 -g -Wall -Werror -pedantic
 LDFLAGS = -lm
-TARGET = raytracer
+TARGET = miniray
 DEFAULT_DIMS = 512 256
 
 HEADERS = camera.h hittable.h materials.h scene.h utilities.h vector.h
